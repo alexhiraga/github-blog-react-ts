@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --blue: #3294F8;
+    --base-title: #E7EDF4;
+    --base-subtitle: #C4D4E3;
+    --base-text: #AFC2D4;
+    --base-span: #7B96B2;
+    --base-label: #3A536B;
+    --base-border: #1C2F41;
+    --base-post: #112131;
+    --base-profile: #0B1B2B;
+    --base-background: #071422;
+    --base-input: #040F1A;
+
+    font-family: 'Nunito', sans-serif;
+    line-height: 160%;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: var(--base-text);
+    background-color: var(--base-background);
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+}
+
+.content {
+    margin: 0 auto;
+    max-width: 864px;
+}
+a {
+    font-weight: 400;
+    color: var(--blue);
+    font-size: 12px;
+    line-height: 160%;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    background: transparent;
+    font-weight: 400;
+    color: var(--blue);
+    border: none;
+    outline: none;
+    font-size: 12px;
+    line-height: 160%;
+}
+button:hover {
+    text-decoration: underline;
+}
+
+h1 {
+  font-size: 24px;
+  line-height: 130%;
+  color: var(--base-title);
+}
+
+h2 {
+    font-size: 20px;
+    line-height: 160%;
+    color: var(--base-title);
+}
+
+h3 {
+    font-size: 18px;
+    line-height: 160%;
+    color: var(--base-title);
+}
+
+p {
+    font-size: 16px;
+    line-height: 160%;
+}
+.text-M {
+    font-size: 16px;
+    line-height: 160%;
+}
+
+input {
+    padding: 12px 16px;
+    background-color: var(--base-input);
+    border: 1px solid var(--base-border);
+    border-radius: 6px;
+    color: var(--base-text);
+}
+
+input:focus {
+    outline: 1px solid var(--blue);
+}
+
+input:placeholder {
+    color: var(--base-label);
+}
+
+.card {
+    background-color: var(--base-post);
+    padding: 32px;
+    border-radius: 10px;
+}
+
+.card:hover {
+    outline: 2px solid var(--base-label);
+}
+
+.profile {
+    background-color: var(--base-profile);
+    padding: 32px;
+    border-radius: 10px;
+}
+
+span {
+    color: var(--base-span);
+    font-size: 14px;
+}
