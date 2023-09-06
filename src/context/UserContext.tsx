@@ -23,6 +23,7 @@ interface UserContextType {
     users: UserData[] | undefined
     selectedUser: UserData
     getNewUser: (url: string) => Promise<void | UserData>
+    getAllUsers: () => void
 }
 
 export const UserContext = createContext({} as UserContextType)
@@ -44,7 +45,11 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
     })
 
     async function getNewUser(url: string) {
-        const response = await api.get(`users/${url}`)
+        //regex to remove the link and use just the name
+        const regex = /^https:\/\/github\.com\//;
+        const user = url.replace(regex, "")
+
+        const response = await api.get(`users/${user}`)
         if(response.status < 200 || response.status >= 400) return 
 
         const newUser = {
@@ -62,23 +67,12 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
         }
         refreshSelectedUser(newUser)
 
-        // Check if there is the same user id registered
-        const userAlreadyRegistered = users.findIndex(user => user.id === newUser.id)
-        if(userAlreadyRegistered > -1) {
-            // Refresh user if it is already registered
-            const updatedUsersList = users.map(user => {
-                if(user.id === newUser.id) {
-                    user = newUser
-                }
-                return user
-            })
-            setUsers(updatedUsersList)
-            return newUser
-        } else {
-            const updatedUsersList = [...users, newUser]
-            setUsers(updatedUsersList)
-            return newUser
-        }
+        //Check if there is already the same user registered
+        // If so, refresh it, else push it
+        // either in localStorage and state
+        saveNewUser(newUser)
+
+        return newUser
     }
 
     function refreshSelectedUser(user: UserData) {
@@ -89,12 +83,50 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
         localStorage.setItem('@github-blog:selected-user-1.0.0', stateJSON)
     }
 
+    function saveNewUser(user: UserData) {
+        // Check if there is the same user id registered
+        //in localStorage
+        const storedStateAsJSON = localStorage.getItem('@github-blog:users-1.0.0')
+        if(storedStateAsJSON) {
+            const userList = JSON.parse(storedStateAsJSON)
+            const userAlreadyRegisteredInLocalStorage = userList.findIndex((_user: { id: number }) => _user.id === user.id)
+            if(userAlreadyRegisteredInLocalStorage > -1) {
+                // Refresh user if it is already registered
+                const updatedUsersList = users.map(_user => {
+                    if(_user.id === user.id) {
+                        _user = user
+                    }
+                    return _user
+                })
+                const stateJSON = JSON.stringify(updatedUsersList)
+                localStorage.setItem('@github-blog:users-1.0.0', stateJSON)
+                setUsers(updatedUsersList)
+            } else {
+                const updatedUsersList = [...users, user]
+                const stateJSON = JSON.stringify(updatedUsersList)
+                localStorage.setItem('@github-blog:users-1.0.0', stateJSON)
+                setUsers(updatedUsersList)
+            }
+        } else {
+            const stateJSON = JSON.stringify([user])
+            localStorage.setItem('@github-blog:users-1.0.0', stateJSON)
+        }
+    }
+
+    function getAllUsers() {
+        const storedStateAsJSON = localStorage.getItem('@github-blog:users-1.0.0')
+        if(storedStateAsJSON) {
+            setUsers(JSON.parse(storedStateAsJSON))
+        }
+    }
+
     return (
         <UserContext.Provider
             value={{
                 users,
                 getNewUser,
-                selectedUser
+                selectedUser,
+                getAllUsers
             }}
         >
             {children}

@@ -1,7 +1,7 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faArrowUpRightFromSquare, faBuilding, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import * as z from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -14,7 +14,7 @@ const searchFormSchema = z.object({
 type SearchFormInput = z.infer<typeof searchFormSchema>
 
 export function Users() {
-    const { getNewUser, users } = useContext(UserContext)
+    const { getNewUser, users, getAllUsers } = useContext(UserContext)
     const navigate = useNavigate()
 
     const {
@@ -24,6 +24,12 @@ export function Users() {
         resolver: zodResolver(searchFormSchema),
     })
 
+    useEffect(() => {
+        //get all users from localStorage
+        getAllUsers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     async function handleNewUser(url: SearchFormInput) {
         const user = url.userUrl
         const newUser = await getNewUser(user)
@@ -31,6 +37,7 @@ export function Users() {
 
         navigate(`/user/${newUser.login}`)
     }
+
 
     return (
         <div className="content">
@@ -65,8 +72,13 @@ export function Users() {
                 )}
                 <div className="grid grid-cols-3 gap-8">
                     {users?.map(user => {
+                        
+                        const openUser = () => {
+                            navigate(`/user/${user.login}`)
+                        }
+
                         return (
-                            <div className="card flex flex-col gap-2" key={user.id}>
+                            <div className="card flex flex-col gap-2" key={user.id} onClick={openUser}>
                                 <img src={user.avatar_url} className="rounded-lg" />
 
                                 <h2>{user.name}</h2>

@@ -2,7 +2,7 @@ import { faArrowUpRightFromSquare, faUserGroup } from "@fortawesome/free-solid-s
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faBuilding } from "@fortawesome/free-regular-svg-icons";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 
@@ -41,12 +41,23 @@ const mock = [
 export function Home() {
     const params = useParams()
     const { getNewUser, selectedUser } = useContext(UserContext)
+    const navigate = useNavigate()
 
     useEffect(() => {
         if(params.userName) {
-            getNewUser(params.userName)
+            getUser(params.userName)
         }
-    }, [getNewUser, params.userName])
+    }, [])
+
+    // get the user data from params, if invalid redirects to home/search page
+    async function getUser(user: string) {
+        try {
+            await getNewUser(user)
+        } catch (error) {
+            console.error(error)   
+            navigate("/")   
+        }
+    }
 
     return (
         <div className="content">
