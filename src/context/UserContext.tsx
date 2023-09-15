@@ -24,6 +24,10 @@ interface UserContextType {
     selectedUser: UserData
     getNewUser: (url: string) => Promise<void | UserData>
     getAllUsers: () => void
+    getFollowers: (login: string) => void
+    followers: UserData[] | undefined
+    saveNewUser: (user: UserData) => void
+    removeUser: (login: string) => void
 }
 
 export const UserContext = createContext({} as UserContextType)
@@ -43,6 +47,7 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
         avatar_url: "",
         repos_url: "",
     })
+    const [followers, setFollowers] = useState<UserData[]>()
 
     async function getNewUser(url: string) {
         //regex to remove the link and use just the name
@@ -102,7 +107,7 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
                 localStorage.setItem('@github-blog:users-1.0.0', stateJSON)
                 setUsers(updatedUsersList)
             } else {
-                const updatedUsersList = [...users, user]
+                const updatedUsersList = [user, ...users]
                 const stateJSON = JSON.stringify(updatedUsersList)
                 localStorage.setItem('@github-blog:users-1.0.0', stateJSON)
                 setUsers(updatedUsersList)
@@ -120,13 +125,32 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
         }
     }
 
+    async function getFollowers(login: string) {
+        const response = await api.get(`users/${login}/followers`)
+        setFollowers(response.data)
+    }
+
+    function removeUser(login: string) {
+        const updatedUsersList = users.filter(_user => {
+            return _user.login !== login
+        })
+
+        const stateJSON = JSON.stringify(updatedUsersList)
+        localStorage.setItem('@github-blog:users-1.0.0', stateJSON)
+        setUsers(updatedUsersList)
+    }
+
     return (
         <UserContext.Provider
             value={{
                 users,
                 getNewUser,
                 selectedUser,
-                getAllUsers
+                getAllUsers,
+                getFollowers,
+                followers,
+                saveNewUser,
+                removeUser
             }}
         >
             {children}

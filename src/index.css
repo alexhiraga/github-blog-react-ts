@@ -31,6 +31,12 @@
 
 }
 
+pre {
+    font-family: 'Nunito', sans-serif;
+    line-height: 160%;
+    font-weight: 400;
+}
+
 .content {
     margin: 0 auto;
     max-width: 864px;
@@ -120,4 +126,10 @@ input:placeholder {
 span {
     color: var(--base-span);
     font-size: 14px;
+}
+
+.quoteCode {
+    background-color: var(--base-post);
+    padding: 16px;
+    margin: 24px 0;
 }

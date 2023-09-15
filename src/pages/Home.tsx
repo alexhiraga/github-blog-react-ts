@@ -1,52 +1,23 @@
-import { faArrowUpRightFromSquare, faUserGroup } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import { faBuilding } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
+import { ReposContext } from "../context/ReposContext";
+import { ptBR } from 'date-fns/locale'
+import { formatDistanceToNow } from 'date-fns'
+import { Profile } from "../components/Profile";
 
-const mock = [
-    {
-        id: 1,
-        title: "Content title",
-        postDate: "há 1 dia",
-        content: "Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in JavaScript and what properties they have. These can be used to build other data structures. Wherever possible, comparisons with other languages are drawn. Dynamic typing",
-    },
-    {
-        id: 2,
-        title: "Content title",
-        postDate: "há 1 dia",
-        content: "Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in JavaScript and what properties they have. These can be used to build other data structures. Wherever possible, comparisons with other languages are drawn. Dynamic typing",
-    },
-    {
-        id: 3,
-        title: "Content title",
-        postDate: "há 1 dia",
-        content: "Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in JavaScript and what properties they have. These can be used to build other data structures. Wherever possible, comparisons with other languages are drawn. Dynamic typing",
-    },
-    {
-        id: 4,
-        title: "Content title",
-        postDate: "há 1 dia",
-        content: "Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in JavaScript and what properties they have. These can be used to build other data structures. Wherever possible, comparisons with other languages are drawn. Dynamic typing",
-    },
-    {
-        id: 5,
-        title: "Content title",
-        postDate: "há 1 dia",
-        content: "Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in JavaScript and what properties they have. These can be used to build other data structures. Wherever possible, comparisons with other languages are drawn. Dynamic typing",
-    },
-]
 export function Home() {
     const params = useParams()
     const { getNewUser, selectedUser } = useContext(UserContext)
+    const { getUserRepos, repos } = useContext(ReposContext)
     const navigate = useNavigate()
 
     useEffect(() => {
         if(params.userName) {
             getUser(params.userName)
+            getRepos(params.userName)
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // get the user data from params, if invalid redirects to home/search page
@@ -59,71 +30,50 @@ export function Home() {
         }
     }
 
+    async function getRepos(user: string) {
+        try {
+            await getUserRepos(user)
+        } catch (error) {
+            console.error(error)   
+            navigate("/")
+        }
+    }
+
     return (
         <div className="content">
             {/* Profile */}
-            <div className="profile -mt-[88px] relative z-10 flex gap-8">
-                <img src={selectedUser.avatar_url} className="w-[148px] h-[148px] object-contain rounded-lg" />
-                <div className="flex flex-col justify-between w-full">
-                    <div>
-                        <div className="flex justify-between my-2 w-full">
-                            <h1>{selectedUser.name}</h1>
-                            <a className="flex gap-2 align-middle" href={selectedUser.html_url} target="_blank">
-                                GITHUB
-                                <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                            </a>
-                        </div>
-                        <p className="text-M">{selectedUser.bio}</p>
-                    </div>
+            <Profile selectedUser={selectedUser} />
 
-                    <div className="flex justify-start gap-6">
-                        <div className="flex gap-2 text-M text-base-subtitle align-middle">
-                            <FontAwesomeIcon icon={faGithub} className="text-base-label my-auto text-lg" />
-                            {selectedUser.login}
-                        </div>
-                        {selectedUser.company && (
-                            <div className="flex gap-2 text-M text-base-subtitle align-middle">
-                                <FontAwesomeIcon icon={faBuilding} className="text-base-label my-auto text-lg" />
-                                {selectedUser.company}
-                            </div>
-                        )}
-                        <div className="flex gap-2 text-M text-base-subtitle align-middle">
-                            <FontAwesomeIcon icon={faUserGroup} className="text-base-label my-auto text-lg" />
-                            {selectedUser.followers} seguidores
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Search */}
             <div>
-                <div className="flex justify-between mt-[72px] mb-3">
-                    <h3>Publicações</h3>
+                <div className="flex justify-between mt-10 mb-3">
+                    <h2>Repositórios</h2>
                     <span>
-                        6 publicações
+                        {repos && repos.length + ' repositórios'}
                     </span>
                 </div>
-
-                <form>
-                    <input type="text" placeholder="Buscar conteúdo" className="w-full mb-12" />
-                </form>
             </div>
 
             {/* Content list */}
             <div className="grid grid-cols-2 gap-8">
-                {mock.map(post => {
+                {repos && repos.map(post => {
+                    const openRepo = () => {
+                        navigate(`/user/${post.owner.login}/${post.name}`)
+                    }
                     return (
-                        <div className="card">
+                        <div className="card hover:cursor-pointer" key={post.id} onClick={openRepo}>
                             <div className="flex justify-between mb-5">
                                 <h2>
-                                    {post.title}
+                                    {post.name}
                                 </h2>
                                 <span>
-                                    {post.postDate}
+                                    {formatDistanceToNow(new Date(post.created_at), {
+                                        addSuffix: true,
+                                        locale: ptBR
+                                    })}
                                 </span>
                             </div>
                             <p>
-                                {post.content.length > 180 ? post.content.substring(0, 181) + '...' : post.content}
+                                {post.description?.length > 180 ? post.description.substring(0, 181) + '...' : post.description}
                             </p>
                         </div>
                     )

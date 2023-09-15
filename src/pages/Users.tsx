@@ -1,5 +1,5 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faArrowUpRightFromSquare, faBuilding, faUserGroup } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare, faBuilding, faTrashCan, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
@@ -14,7 +14,7 @@ const searchFormSchema = z.object({
 type SearchFormInput = z.infer<typeof searchFormSchema>
 
 export function Users() {
-    const { getNewUser, users, getAllUsers } = useContext(UserContext)
+    const { getNewUser, users, getAllUsers, removeUser } = useContext(UserContext)
     const navigate = useNavigate()
 
     const {
@@ -77,11 +77,22 @@ export function Users() {
                             navigate(`/user/${user.login}`)
                         }
 
-                        return (
-                            <div className="card flex flex-col gap-2" key={user.id} onClick={openUser}>
-                                <img src={user.avatar_url} className="rounded-lg" />
+                        const removeUserFromList = () => {
+                            removeUser(user.login)
+                        }
 
-                                <h2>{user.name}</h2>
+                        return (
+                            <div className="card flex flex-col gap-2 relative" key={user.id}>
+                                <button 
+                                    className="absolute bottom-4 right-5 hover:text-red-400 transition-colors z-20" 
+                                    onClick={removeUserFromList}
+                                    title="Remover usuário da lista"
+                                >
+                                    <FontAwesomeIcon icon={faTrashCan} />
+                                </button>
+                                <img src={user.avatar_url} className="rounded-lg cursor-pointer" onClick={openUser} />
+
+                                <h2 onClick={openUser} className="hover:underline cursor-pointer">{user.name}</h2>
                                 <a className="flex justify-start gap-2 text-M text-base-subtitle align-middle" href={user.html_url} target="_blank">
                                     <FontAwesomeIcon icon={faGithub} className="text-base-label my-auto text-lg" />
                                     {user.login}
@@ -92,10 +103,10 @@ export function Users() {
                                         {user.company}
                                     </div>
                                 )}
-                                <div className="flex justify-start gap-2 text-M text-base-subtitle align-middle" >
+                                <a className="flex justify-start gap-2 text-M text-base-subtitle align-middle" href={`/user/${user.login}/followers`}>
                                     <FontAwesomeIcon icon={faUserGroup} className="text-base-label my-auto text-lg" />
                                     {user.followers} seguidores
-                                </div>
+                                </a>
                             </div>
                         )
                     })}

@@ -10,7 +10,6 @@ export function Navbar() {
     const navigate = useNavigate()
 
     const redirectToHome = () => {
-        console.log('asd')
         navigate('/')
     }
 
