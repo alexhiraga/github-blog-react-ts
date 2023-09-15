@@ -28,6 +28,7 @@ interface UserContextType {
     followers: UserData[] | undefined
     saveNewUser: (user: UserData) => void
     removeUser: (login: string) => void
+    errorMessage: string
 }
 
 export const UserContext = createContext({} as UserContextType)
@@ -48,40 +49,49 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
         repos_url: "",
     })
     const [followers, setFollowers] = useState<UserData[]>()
+    const [errorMessage, setErrorMessage] = useState<string>("")
 
     async function getNewUser(url: string) {
         //regex to remove the link and use just the name
         const regex = /^https:\/\/github\.com\//;
         const user = url.replace(regex, "")
 
-        const response = await api.get(`users/${user}`)
-        if(response.status < 200 || response.status >= 400) return 
+        try {
+            const response = await api.get(`users/${user}`)
+            if (response.status < 200 || response.status >= 400) return
 
-        const newUser = {
-            id: response.data.id,
-            login: response.data.login,
-            name: response.data.name,
-            company: response.data.company,
-            bio: response.data.bio,
-            public_repos: response.data.public_repos,
-            followers: response.data.followers,
-            html_url: response.data.html_url,
-            followers_url: response.data.followers_url,
-            avatar_url: response.data.avatar_url,
-            repos_url: response.data.repos_url
+            const newUser = {
+                id: response.data.id,
+                login: response.data.login,
+                name: response.data.name,
+                company: response.data.company,
+                bio: response.data.bio,
+                public_repos: response.data.public_repos,
+                followers: response.data.followers,
+                html_url: response.data.html_url,
+                followers_url: response.data.followers_url,
+                avatar_url: response.data.avatar_url,
+                repos_url: response.data.repos_url
+            }
+            refreshSelectedUser(newUser)
+
+            //Check if there is already the same user registered
+            // If so, refresh it, else push it
+            // either in localStorage and state
+            saveNewUser(newUser)
+
+            return newUser
+        } catch (error) {
+            console.error(error)
+            setErrorMessage("Houve um erro, confira se o usuário existe ou tente novamente mais tarde.")
+            setTimeout(() => {
+                setErrorMessage("")
+            }, 5000)
         }
-        refreshSelectedUser(newUser)
-
-        //Check if there is already the same user registered
-        // If so, refresh it, else push it
-        // either in localStorage and state
-        saveNewUser(newUser)
-
-        return newUser
     }
 
     function refreshSelectedUser(user: UserData) {
-        if(!user) return
+        if (!user) return
 
         setSelectedUser(user)
         const stateJSON = JSON.stringify(user)
@@ -92,13 +102,13 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
         // Check if there is the same user id registered
         //in localStorage
         const storedStateAsJSON = localStorage.getItem('@github-blog:users-1.0.0')
-        if(storedStateAsJSON) {
+        if (storedStateAsJSON) {
             const userList = JSON.parse(storedStateAsJSON)
             const userAlreadyRegisteredInLocalStorage = userList.findIndex((_user: { id: number }) => _user.id === user.id)
-            if(userAlreadyRegisteredInLocalStorage > -1) {
+            if (userAlreadyRegisteredInLocalStorage > -1) {
                 // Refresh user if it is already registered
                 const updatedUsersList = users.map(_user => {
-                    if(_user.id === user.id) {
+                    if (_user.id === user.id) {
                         _user = user
                     }
                     return _user
@@ -120,7 +130,7 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
 
     function getAllUsers() {
         const storedStateAsJSON = localStorage.getItem('@github-blog:users-1.0.0')
-        if(storedStateAsJSON) {
+        if (storedStateAsJSON) {
             setUsers(JSON.parse(storedStateAsJSON))
         }
     }
@@ -150,7 +160,8 @@ export function UserContextProvider({ children }: UserContextTypeProps) {
                 getFollowers,
                 followers,
                 saveNewUser,
-                removeUser
+                removeUser,
+                errorMessage
             }}
         >
             {children}

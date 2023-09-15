@@ -17,7 +17,7 @@ function App() {
                 </ReposContextProvider>
             </UserContextProvider>
         </div>
-  )
+    )
 }
 
 export default App

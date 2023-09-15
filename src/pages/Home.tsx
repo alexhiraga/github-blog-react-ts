@@ -13,11 +13,11 @@ export function Home() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if(params.userName) {
+        if (params.userName) {
             getUser(params.userName)
             getRepos(params.userName)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // get the user data from params, if invalid redirects to home/search page
@@ -25,8 +25,8 @@ export function Home() {
         try {
             await getNewUser(user)
         } catch (error) {
-            console.error(error)   
-            navigate("/")   
+            console.error(error)
+            navigate("/")
         }
     }
 
@@ -34,7 +34,7 @@ export function Home() {
         try {
             await getUserRepos(user)
         } catch (error) {
-            console.error(error)   
+            console.error(error)
             navigate("/")
         }
     }
@@ -78,7 +78,6 @@ export function Home() {
                         </div>
                     )
                 })}
-
             </div>
         </div>
     )

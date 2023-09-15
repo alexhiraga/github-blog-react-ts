@@ -11,11 +11,11 @@ export function Followers() {
     const { getNewUser, selectedUser, followers, getFollowers, saveNewUser } = useContext(UserContext)
 
     useEffect(() => {
-        if(params.userName) {
+        if (params.userName) {
             getUser(params.userName)
             getUserFollowers(params.userName)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // get the user data from params, if invalid redirects to home/search page
@@ -23,8 +23,8 @@ export function Followers() {
         try {
             await getNewUser(user)
         } catch (error) {
-            console.error(error)   
-            navigate("/")   
+            console.error(error)
+            navigate("/")
         }
     }
 
@@ -37,7 +37,6 @@ export function Followers() {
         }
     }
 
-    
     return (
         <div className="content">
             <Profile selectedUser={selectedUser} />

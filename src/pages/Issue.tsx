@@ -23,11 +23,11 @@ export function Issue() {
     }
 
     useEffect(() => {
-        if(params.userName && params.repoName && params.issueNumber) {
+        if (params.userName && params.repoName && params.issueNumber) {
             getUser(params.userName)
             getSelectedIssue(params.userName, params.repoName, params.issueNumber)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // get the user data from params, if invalid redirects to home/search page
@@ -35,8 +35,8 @@ export function Issue() {
         try {
             await getNewUser(user)
         } catch (error) {
-            console.error(error)   
-            navigate("/")   
+            console.error(error)
+            navigate("/")
         }
     }
 
@@ -51,7 +51,7 @@ export function Issue() {
 
     const codeBlockRegex = /```([\s\S]*?)```/g;
     const codeFormatted = selectedIssue?.body.split(codeBlockRegex)
-    
+
     return (
         <div className="content">
             {/* Post title and infos */}
@@ -93,7 +93,7 @@ export function Issue() {
             {/* Content */}
             <div className="py-10 px-8">
                 {codeFormatted?.map((segment, index) => {
-                    if(index % 2 === 0) {
+                    if (index % 2 === 0) {
                         return <pre key={index}>{segment}</pre>
                     } else {
                         return (

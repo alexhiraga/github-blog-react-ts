@@ -18,7 +18,6 @@ interface IssuesData {
     items: IssuesItems[]
 }
 
-
 interface IssuesItems {
     id: number
     url: string
@@ -39,7 +38,6 @@ interface ReposContextType {
     repos: RepoData[] | undefined
     repoIssues: IssuesData | undefined
     selectedIssue: IssuesItems | undefined
-    // selectedRepo: RepoData | undefined
     getUserRepos: (user: string) => void
     getReposIssues: (user: string, repo: string) => void
     getIssue: (user: string, repo: string, number: string) => void
@@ -71,7 +69,7 @@ export function ReposContextProvider({ children }: ReposContextTypeProps) {
         setRepoIssues(response.data)
 
         // a state to show if the issues is filtered or not
-        if(!q) setIsFiltered(false)
+        if (!q) setIsFiltered(false)
         else setIsFiltered(true)
     }
 
@@ -79,7 +77,6 @@ export function ReposContextProvider({ children }: ReposContextTypeProps) {
         const response = await api.get(`repos/${user}/${repo}/issues/${number}`)
         setSelectedIssue(response.data)
     }
-
 
     return (
         <ReposContext.Provider

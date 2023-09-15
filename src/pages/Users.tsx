@@ -14,7 +14,7 @@ const searchFormSchema = z.object({
 type SearchFormInput = z.infer<typeof searchFormSchema>
 
 export function Users() {
-    const { getNewUser, users, getAllUsers, removeUser } = useContext(UserContext)
+    const { getNewUser, users, getAllUsers, removeUser, errorMessage } = useContext(UserContext)
     const navigate = useNavigate()
 
     const {
@@ -27,13 +27,13 @@ export function Users() {
     useEffect(() => {
         //get all users from localStorage
         getAllUsers()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     async function handleNewUser(url: SearchFormInput) {
         const user = url.userUrl
         const newUser = await getNewUser(user)
-        if(!newUser) return 
+        if (!newUser) return
 
         navigate(`/user/${newUser.login}`)
     }
@@ -44,7 +44,7 @@ export function Users() {
             {/* Header */}
             <div className="profile -mt-[88px] relative z-10 flex gap-8">
                 <FontAwesomeIcon icon={faGithub} className="w-40 h-40" />
-                
+
                 <div className="w-full">
                     <div className="flex justify-between my-2">
                         <h1>Search Github users' repos</h1>
@@ -55,13 +55,19 @@ export function Users() {
                     </div>
 
                     <form onSubmit={handleSubmit(handleNewUser)}>
-                        <input 
-                            type="text" 
-                            placeholder="Insira uma URL válida ou login de um usuário" 
+                        <input
+                            type="text"
+                            placeholder="Insira uma URL válida ou login de um usuário"
                             className="w-full"
                             {...register('userUrl')}
                         />
                     </form>
+
+                    {errorMessage && (
+                        <div className="text-red-300 mt-2">
+                            {errorMessage}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -72,7 +78,7 @@ export function Users() {
                 )}
                 <div className="grid grid-cols-3 gap-8">
                     {users?.map(user => {
-                        
+
                         const openUser = () => {
                             navigate(`/user/${user.login}`)
                         }
@@ -83,8 +89,8 @@ export function Users() {
 
                         return (
                             <div className="card flex flex-col gap-2 relative" key={user.id}>
-                                <button 
-                                    className="absolute bottom-4 right-5 hover:text-red-400 transition-colors z-20" 
+                                <button
+                                    className="absolute bottom-4 right-5 hover:text-red-400 transition-colors z-20"
                                     onClick={removeUserFromList}
                                     title="Remover usuário da lista"
                                 >

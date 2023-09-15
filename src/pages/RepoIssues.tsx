@@ -29,11 +29,11 @@ export function RepoIssues() {
     })
 
     useEffect(() => {
-        if(params.userName && params.repoName) {
+        if (params.userName && params.repoName) {
             getUser(params.userName)
             getIssues(params.userName, params.repoName)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // get the user data from params, if invalid redirects to home/search page
@@ -41,8 +41,8 @@ export function RepoIssues() {
         try {
             await getNewUser(user)
         } catch (error) {
-            console.error(error)   
-            navigate("/")   
+            console.error(error)
+            navigate("/")
         }
     }
 
@@ -56,13 +56,13 @@ export function RepoIssues() {
     }
 
     async function handleSearchIssue(q: SearchFormInput) {
-        if(params.userName && params.repoName)
-        searchIssues(params.userName, params.repoName, q.query)
+        if (params.userName && params.repoName)
+            searchIssues(params.userName, params.repoName, q.query)
     }
 
     const clearInput = () => {
-        if(params.userName && params.repoName)
-        getReposIssues(params.userName, params.repoName)
+        if (params.userName && params.repoName)
+            getReposIssues(params.userName, params.repoName)
         reset()
     }
 
@@ -81,9 +81,9 @@ export function RepoIssues() {
                 </div>
 
                 <form onSubmit={handleSubmit(handleSearchIssue)}>
-                    <input 
-                        type="text" 
-                        placeholder="Buscar conteúdo" 
+                    <input
+                        type="text"
+                        placeholder="Buscar conteúdo"
                         className="w-full"
                         {...register('query')}
                     />
@@ -96,7 +96,7 @@ export function RepoIssues() {
                     </div>
                 )}
             </div>
-            
+
             {/* Repo Issues */}
             <div className="grid grid-cols-2 gap-8 mb-10">
                 {repoIssues && repoIssues.items.map(post => {
