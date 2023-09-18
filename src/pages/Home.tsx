@@ -26,7 +26,7 @@ export function Home() {
             await getNewUser(user)
         } catch (error) {
             console.error(error)
-            navigate("/")
+            navigate("/github-blog-react-ts")
         }
     }
 
@@ -35,7 +35,7 @@ export function Home() {
             await getUserRepos(user)
         } catch (error) {
             console.error(error)
-            navigate("/")
+            navigate("/github-blog-react-ts")
         }
     }
 
@@ -57,7 +57,7 @@ export function Home() {
             <div className="grid grid-cols-2 gap-8">
                 {repos && repos.map(post => {
                     const openRepo = () => {
-                        navigate(`/user/${post.owner.login}/${post.name}`)
+                        navigate(`/github-blog-react-ts/user/${post.owner.login}/${post.name}`)
                     }
                     return (
                         <div className="card hover:cursor-pointer" key={post.id} onClick={openRepo}>

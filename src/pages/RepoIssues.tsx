@@ -42,7 +42,7 @@ export function RepoIssues() {
             await getNewUser(user)
         } catch (error) {
             console.error(error)
-            navigate("/")
+            navigate("/github-blog-react-ts")
         }
     }
 
@@ -51,7 +51,7 @@ export function RepoIssues() {
             await getReposIssues(user, repo)
         } catch (error) {
             console.error(error)
-            navigate("/")
+            navigate("/github-blog-react-ts")
         }
     }
 
@@ -101,7 +101,7 @@ export function RepoIssues() {
             <div className="grid grid-cols-2 gap-8 mb-10">
                 {repoIssues && repoIssues.items.map(post => {
                     const redirectToIssue = () => {
-                        navigate(`/repos/${selectedUser.login}/${params.repoName}/issues/${post.number}`)
+                        navigate(`/github-blog-react-ts/repos/${selectedUser.login}/${params.repoName}/issues/${post.number}`)
                     }
                     return (
                         <div className="card hover:cursor-pointer" key={post.id} onClick={redirectToIssue}>

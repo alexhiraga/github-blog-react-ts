@@ -35,7 +35,7 @@ export function Users() {
         const newUser = await getNewUser(user)
         if (!newUser) return
 
-        navigate(`/user/${newUser.login}`)
+        navigate(`/github-blog-react-ts/user/${newUser.login}`)
     }
 
 
@@ -80,7 +80,7 @@ export function Users() {
                     {users?.map(user => {
 
                         const openUser = () => {
-                            navigate(`/user/${user.login}`)
+                            navigate(`/github-blog-react-ts/user/${user.login}`)
                         }
 
                         const removeUserFromList = () => {

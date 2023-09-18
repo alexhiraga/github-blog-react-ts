@@ -12,11 +12,11 @@ export function Profile({ selectedUser }: Props) {
     const navigate = useNavigate()
 
     const redirectToUserRepos = () => {
-        navigate(`/user/${selectedUser.login}`)
+        navigate(`/github-blog-react-ts/user/${selectedUser.login}`)
     }
 
     const redirectToFollowers = () => {
-        navigate(`/user/${selectedUser.login}/followers`)
+        navigate(`/github-blog-react-ts/user/${selectedUser.login}/followers`)
     }
 
     return (

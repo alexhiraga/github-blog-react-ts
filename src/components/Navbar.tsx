@@ -10,7 +10,7 @@ export function Navbar() {
     const navigate = useNavigate()
 
     const redirectToHome = () => {
-        navigate('/')
+        navigate('/github-blog-react-ts')
     }
 
     return (

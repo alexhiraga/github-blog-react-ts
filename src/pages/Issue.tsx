@@ -19,7 +19,7 @@ export function Issue() {
     }
 
     const navigateToGithub = () => {
-        navigate("/")
+        navigate("/github-blog-react-ts")
     }
 
     useEffect(() => {
@@ -36,7 +36,7 @@ export function Issue() {
             await getNewUser(user)
         } catch (error) {
             console.error(error)
-            navigate("/")
+            navigate("/github-blog-react-ts")
         }
     }
 
@@ -45,7 +45,7 @@ export function Issue() {
             await getIssue(user, repo, number)
         } catch (error) {
             console.error(error)
-            navigate("/")
+            navigate("/github-blog-react-ts")
         }
     }
 

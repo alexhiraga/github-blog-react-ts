@@ -24,7 +24,7 @@ export function Followers() {
             await getNewUser(user)
         } catch (error) {
             console.error(error)
-            navigate("/")
+            navigate("/github-blog-react-ts")
         }
     }
 
@@ -33,7 +33,7 @@ export function Followers() {
             await getFollowers(user)
         } catch (error) {
             console.error(error)
-            navigate("/")
+            navigate("/github-blog-react-ts")
         }
     }
 
@@ -60,10 +60,10 @@ export function Followers() {
                             //save in localStorage to display in users list
                             try {
                                 await saveNewUser(user)
-                                navigate(`/user/${user.login}`)
+                                navigate(`/github-blog-react-ts/user/${user.login}`)
                             } catch (error) {
                                 console.error(error)
-                                navigate("/")
+                                navigate("/github-blog-react-ts")
                             }
                         }
 
