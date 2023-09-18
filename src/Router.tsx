@@ -8,14 +8,14 @@ import { Followers } from "./pages/Followers";
 export function Router() {
     return (
         <Routes>
-            <Route path="/" element={ <Users /> } />
-            <Route path="/user/:userName" element={ <Home /> } />
-            <Route path="/user/:userName/:repoName" element={ <RepoIssues /> } />
+            <Route path="/github-blog-react-ts" element={ <Users /> } />
+            <Route path="/github-blog-react-ts/user/:userName" element={ <Home /> } />
+            <Route path="/github-blog-react-ts/user/:userName/:repoName" element={ <RepoIssues /> } />
             <Route 
-                path="/repos/:userName/:repoName/issues/:issueNumber"
+                path="/github-blog-react-ts/repos/:userName/:repoName/issues/:issueNumber"
                 element={ <Issue /> }
             />
-            <Route path="/user/:userName/followers" element={ <Followers /> } />
+            <Route path="/github-blog-react-ts/user/:userName/followers" element={ <Followers /> } />
         </Routes>
     );
 }
